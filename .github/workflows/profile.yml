@@ -1,0 +1,60 @@
+name: profile
+
+# Refreshes the living parts of the README once a day:
+#   assets/generated/snake-*.svg   contribution snake (Platane/snk)
+#   assets/generated/stats-*.svg   activity card (scripts/update_profile.py)
+#   README.md ~/log block          recent public activity
+on:
+  schedule:
+    - cron: "23 1 * * *"     # daily, 01:23 UTC
+  workflow_dispatch:          # run it by hand from the Actions tab
+  push:
+    branches: [main]
+    paths:
+      - "scripts/**"
+      - ".github/workflows/profile.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: profile
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Contribution snake
+        uses: Platane/snk@v3
+        with:
+          github_user_name: ${{ github.repository_owner }}
+          outputs: |
+            assets/generated/snake-light.svg?color_snake=#0e7490
+            assets/generated/snake-dark.svg?palette=github-dark&color_snake=#67e8f9
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Activity card and log
+        env:
+          # Optional: add a PROFILE_TOKEN secret (classic PAT, read:user) to count private
+          # contributions. Without it the built-in token is used and only public data appears.
+          GITHUB_TOKEN: ${{ secrets.PROFILE_TOKEN || secrets.GITHUB_TOKEN }}
+          PROFILE_USER: ${{ github.repository_owner }}
+        run: python scripts/update_profile.py
+
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md assets/generated
+          if git diff --cached --quiet; then
+            echo "nothing changed"
+          else
+            git commit -m "chore(profile): daily refresh"
+            git push
+          fi

@@ -1,33 +1,30 @@
 <div align="center">
 
-<br>
-
-# Deepak Skandh
-
-**AI &nbsp;×&nbsp; Systems &nbsp;×&nbsp; Engineering**
-
-<p><i>"Every abstraction is a promise. I read the fine print."</i></p>
-
-<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=500&size=16&duration=2600&pause=1200&color=58A6FF&center=true&vCenter=true&width=560&height=32&lines=don%27t+just+use+the+abstraction.;understand+what%27s+underneath+it.;then+build+it+again%2C+from+scratch." alt="don't just use the abstraction. understand what's underneath it." />
-
-<br>
-
-<!-- Replace with a suitable developer GIF -->
-<img src="data-code.gif" width="460" alt="late-night terminal session" /> 
-
-<sub>building, breaking, and understanding things from the inside out.</sub>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/DeepakSkandh/DeepakSkandh/main/assets/header-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/DeepakSkandh/DeepakSkandh/main/assets/header-light.svg">
+  <img alt="Deepak Skandh. AI × Systems × Engineering. Every abstraction is a promise. I read the fine print." src="https://raw.githubusercontent.com/DeepakSkandh/DeepakSkandh/main/assets/header-dark.svg" width="100%">
+</picture>
 
 <br><br>
 
-<a href="#mindset">mindset</a> &nbsp;·&nbsp;
-<a href="#interests">interests</a> &nbsp;·&nbsp;
-<a href="#learning">learning</a> &nbsp;·&nbsp;
-<a href="#from-scratch">from scratch</a> &nbsp;·&nbsp;
-<a href="#philosophy">philosophy</a> &nbsp;·&nbsp;
-<a href="#stack">stack</a> &nbsp;·&nbsp;
-<a href="#exploring">exploring</a> &nbsp;·&nbsp;
-<a href="#activity">activity</a> &nbsp;·&nbsp;
-<a href="#connect">connect</a>
+<img alt="A terminal session: whoami prints deepak skandh, then underneath --list maps each abstraction to what lies beneath it." src="https://raw.githubusercontent.com/DeepakSkandh/DeepakSkandh/main/assets/terminal.svg" width="86%">
+
+<p>
+  <img src="./assets_old/data-code.gif" width="420">
+</p>
+
+<br><br>
+
+<a href="#mindset"><kbd>&nbsp;mindset&nbsp;</kbd></a>&nbsp;
+<a href="#interests"><kbd>&nbsp;interests&nbsp;</kbd></a>&nbsp;
+<a href="#learning"><kbd>&nbsp;learning&nbsp;</kbd></a>&nbsp;
+<a href="#from-scratch"><kbd>&nbsp;from scratch&nbsp;</kbd></a>&nbsp;
+<a href="#philosophy"><kbd>&nbsp;philosophy&nbsp;</kbd></a>&nbsp;
+<a href="#stack"><kbd>&nbsp;stack&nbsp;</kbd></a>&nbsp;
+<a href="#exploring"><kbd>&nbsp;exploring&nbsp;</kbd></a>&nbsp;
+<a href="#activity"><kbd>&nbsp;activity&nbsp;</kbd></a>&nbsp;
+<a href="#connect"><kbd>&nbsp;connect&nbsp;</kbd></a>
 
 </div>
 
@@ -35,58 +32,97 @@
 
 ## `~/mindset`
 
-<sub>don't just use the abstraction. understand what's underneath it.</sub>
+> [!IMPORTANT]
+> **Don't just use the abstraction. Understand what's underneath it.**
 
-Most of what I learn starts with a question an abstraction politely refuses to answer. Why is this query slow? Where does this tensor actually live? What does a framework do between a request arriving and a response leaving? I'd rather open the box than memorize its labels.
+Most of what I learn starts with a question an abstraction politely refuses to answer. Why is this query slow? Where does this tensor actually live? What happens between a request arriving and a response leaving? Every abstraction leaks eventually,[^leaky] and when it does, I want to already know what's underneath.
 
-| the abstraction | what I want to see underneath |
+| when I use | I want to understand |
 | :-- | :-- |
-| `framework` | the implementation |
-| `API` | the protocol |
-| `database` | the query engine |
-| `model` | the architecture and the optimization |
-| `library` | the algorithm |
-| `abstraction` | the system beneath it |
+| a framework | its implementation |
+| an API | the protocol beneath it |
+| a database | its query engine |
+| a model | its architecture, and how it is optimized |
+| a library | the algorithm inside |
+| any abstraction | the system it hides |
 
-**one line, all the way down**
+### one line, all the way down
+
+<sub>Open a line to follow it through the layers.</sub>
 
 <details>
-<summary><code>SELECT * FROM users WHERE id = 42;</code></summary>
+<summary><code>SELECT name FROM users WHERE id = 42;</code></summary>
+<br>
 
-```text
-SELECT * FROM users WHERE id = 42;
- └─ tokenized and parsed into an AST
-    └─ planner weighs index scan vs. sequential scan
-       └─ B+ tree traversal → page id
-          └─ buffer pool hit? otherwise read from disk
-             └─ tuple decoded → row returned
+```mermaid
+sequenceDiagram
+    autonumber
+    participant C as client
+    participant P as parser
+    participant O as planner + optimizer
+    participant E as executor
+    participant B as buffer pool
+    participant D as disk
+    C->>P: SELECT name FROM users WHERE id = 42
+    P->>O: syntax tree
+    O->>O: index scan or sequential scan?
+    O->>E: physical plan (index scan on users_pkey)
+    E->>B: B+ tree pages for id = 42
+    alt page already in memory
+        B-->>E: page
+    else cache miss
+        B->>D: read page
+        D-->>B: page
+        B-->>E: page
+    end
+    E-->>C: (1 row)
 ```
 
 </details>
 
 <details>
 <summary><code>loss.backward()</code></summary>
+<br>
+
+Reverse-mode autodiff walks the computation graph backwards and multiplies local derivatives along the way:
+
+$$
+\frac{\partial \mathcal{L}}{\partial \theta} = \frac{\partial \mathcal{L}}{\partial y} \cdot \frac{\partial y}{\partial h} \cdot \frac{\partial h}{\partial \theta}
+$$
 
 ```text
 loss.backward()
- └─ walk the computation graph in reverse
-    └─ apply the chain rule at every node
-       └─ accumulate gradients into .grad tensors
-          └─ launch matmul / elementwise kernels on the GPU
+ └─ traverse the autograd graph in reverse topological order
+    └─ each op's backward() applies its local derivative
+       └─ gradients accumulate into every leaf tensor's .grad
+          └─ kernels launch on the GPU
              └─ often limited by memory bandwidth, not FLOPs
 ```
 
 </details>
 
 <details>
+<summary><code>softmax(QKᵀ / √dₖ) V</code></summary>
+<br>
+
+$$
+\mathrm{Attention}(Q, K, V) = \mathrm{softmax}\left(\frac{QK^{\top}}{\sqrt{d_k}}\right)V
+$$
+
+For a sequence of length $n$, the score matrix $QK^{\top}$ is $n \times n$, so naive attention costs $O(n^2 d)$ time and $O(n^2)$ memory. FlashAttention computes the exact same result in tiles that never write the full matrix to GPU memory, which is one reason long context windows became practical.
+
+</details>
+
+<details>
 <summary><code>printf("hello\n");</code></summary>
+<br>
 
 ```text
 printf("hello\n");
  └─ formatted into a user-space stdio buffer
-    └─ newline flushes it → write() system call
-       └─ trap into the kernel
-          └─ file descriptor → tty driver
+    └─ the newline flushes it: write(1, "hello\n", 6)
+       └─ system call traps into the kernel
+          └─ file descriptor 1 → tty driver
              └─ characters on a terminal
 ```
 
@@ -96,150 +132,77 @@ printf("hello\n");
 
 ## `~/interests`
 
-<sub>four questions I keep coming back to</sub>
-
-<table>
-<tr>
-<td width="25%" valign="top">
-<b>🧠 intelligence</b><br>
-<sub><i>why does it generalize?</i></sub>
-<br><br>
-artificial intelligence<br>
-machine learning<br>
-deep learning<br>
-LLMs · generative AI<br>
-NLP<br>
-computer vision
-</td>
-<td width="25%" valign="top">
-<b>⚙️ systems</b><br>
-<sub><i>where does the time go?</i></sub>
-<br><br>
-backend engineering<br>
-database systems<br>
-distributed systems<br>
-high-performance computing<br>
-systems engineering<br>
-automation
-</td>
-<td width="25%" valign="top">
-<b>🧮 foundations</b><br>
-<sub><i>what does it cost?</i></sub>
-<br><br>
-algorithms<br>
-data structures<br>
-competitive programming<br>
-probability<br>
-statistics
-</td>
-<td width="25%" valign="top">
-<b>🔬 science</b><br>
-<sub><i>what does the data say?</i></sub>
-<br><br>
-data science<br>
-computational biology<br>
-research<br>
-experimentation
-</td>
-</tr>
-</table>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/DeepakSkandh/DeepakSkandh/main/assets/interests-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/DeepakSkandh/DeepakSkandh/main/assets/interests-light.svg">
+  <img alt="Intelligence (why does it generalize?): artificial intelligence, machine learning, deep learning, LLMs and generative AI, NLP, computer vision. Systems (where does the time go?): backend engineering, database systems, distributed systems, HPC, systems engineering, automation. Foundations (what does it cost?): algorithms, data structures, competitive programming, probability, statistics. Science (what does the data say?): data science, computational biology, research, experimentation." src="https://raw.githubusercontent.com/DeepakSkandh/DeepakSkandh/main/assets/interests-dark.svg" width="100%">
+</picture>
 
 <br>
 
 ## `~/learning`
 
-<sub>in progress. nothing here is marked done.</sub>
+> [!NOTE]
+> Every branch is open and nothing is merged. This is a record of direction, not a list of things I've finished.
 
-<table>
-<tr>
-<td width="50%" valign="top">
-
-```text
-algorithms/
-├── data-structures
-├── algorithms
-├── problem-solving
-└── competitive-programming
-
-mathematics/
-├── probability
-├── statistics
-├── linear-algebra
-└── optimization
+```mermaid
+%%{init: {'theme': 'base', 'gitGraph': {'mainBranchName': 'fundamentals', 'showCommitLabel': true}, 'themeVariables': {'git0': '#8b949e', 'git1': '#22a6c7', 'git2': '#6d8cf5', 'git3': '#8b5cf6', 'git4': '#e0952f', 'gitBranchLabel0': '#ffffff', 'gitBranchLabel1': '#ffffff', 'gitBranchLabel2': '#ffffff', 'gitBranchLabel3': '#ffffff', 'gitBranchLabel4': '#ffffff', 'commitLabelColor': '#ffffff', 'commitLabelBackground': '#59636e', 'commitLabelFontSize': '11px'}}}%%
+gitGraph
+    commit id: "start"
+    branch algorithms
+    commit id: "data structures"
+    commit id: "algorithms"
+    commit id: "problem solving"
+    commit id: "competitive programming" type: HIGHLIGHT
+    checkout fundamentals
+    branch systems
+    commit id: "c++"
+    commit id: "operating systems"
+    commit id: "networks"
+    commit id: "database internals"
+    commit id: "systems programming" type: HIGHLIGHT
+    checkout fundamentals
+    branch ai
+    commit id: "deep learning"
+    commit id: "transformers"
+    commit id: "llms"
+    commit id: "nlp"
+    commit id: "computer vision"
+    commit id: "ml engineering" type: HIGHLIGHT
+    checkout fundamentals
+    branch mathematics
+    commit id: "probability"
+    commit id: "statistics"
+    commit id: "linear algebra"
+    commit id: "optimization" type: HIGHLIGHT
 ```
 
-</td>
-<td width="50%" valign="top">
-
-```text
-systems/
-├── c++
-├── operating-systems
-├── computer-networks
-├── database-internals
-└── systems-programming
-
-ai/
-├── deep-learning
-├── transformers
-├── llms
-├── nlp
-├── computer-vision
-└── ml-engineering
-```
-
-</td>
-</tr>
-</table>
-
-<sub><code>4 directories · 19 topics · 0 marked "done"</code></sub>
-
-<br><br>
+<br>
 
 ## `~/from-scratch`
 
-<sub>things i want to build from scratch, because building is how I find out what I didn't understand.</sub>
+Things I want to build from scratch, because building something is the fastest way to find out what I didn't understand about it.
 
-```text
-# target: a database engine, one layer at a time
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/DeepakSkandh/DeepakSkandh/main/assets/pipeline-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/DeepakSkandh/DeepakSkandh/main/assets/pipeline-light.svg">
+  <img alt="minidb, a database engine built one layer at a time: parser, query planner, optimizer, execution engine, storage engine, indexes, transactions, concurrency control, recovery." src="https://raw.githubusercontent.com/DeepakSkandh/DeepakSkandh/main/assets/pipeline-dark.svg" width="100%">
+</picture>
 
-  query
-    ↓
-  parser              text → tokens → AST
-    ↓
-  query planner       AST → logical plan
-    ↓
-  optimizer           cost model → physical plan
-    ↓
-  execution engine    iterators · joins · aggregation
-    ↓
-  storage engine      pages · buffer pool · heap files
-    ↓
-  indexes             B+ trees · hash indexes
-    ↓
-  transactions        ACID · isolation levels
-    ↓
-  concurrency         locking · MVCC
-    ↓
-  recovery            write-ahead log · checkpoints
-```
+### the build list
 
-<details>
-<summary><b>more on the list</b></summary>
+<sub>Each box gets checked and linked to its repo when it ships.</sub>
 
-```text
-autograd engine          → how backprop actually flows
-transformer, no libs     → what attention is really computing
-memory allocator         → what malloc hides
-http server on sockets   → what a framework does per request
-key-value store (LSM)    → why writes are cheap and reads aren't
-raft consensus           → how machines agree
-thread pool              → what concurrency costs
-```
+- [ ] **minidb**: a database engine, from the parser down to crash recovery
+- [ ] **autograd engine**: to see how backprop actually flows
+- [ ] **transformer, no libraries**: to see what attention is really computing
+- [ ] **memory allocator**: to see what `malloc` hides
+- [ ] **HTTP server on raw sockets**: to see what a framework does per request
+- [ ] **LSM-tree key-value store**: to see why writes are cheap and reads aren't
+- [ ] **Raft**: to see how machines agree
+- [ ] **thread pool**: to see what concurrency costs
 
-</details>
-
-**rules of engagement**
+### rules of engagement
 
 ```diff
 - consume the system
@@ -262,14 +225,16 @@ thread pool              → what concurrency costs
 
 ## `~/philosophy`
 
-<sub>the loop</sub>
-
 ```mermaid
 flowchart LR
-    A([learn]) --> B([build]) --> C([break]) --> D([debug]) --> E([understand]) --> F([rebuild]) --> G([ship])
-    G -. next problem .-> A
-    classDef step fill:#0d1117,stroke:#58a6ff,stroke-width:1px,color:#c9d1d9
-    class A,B,C,D,E,F,G step
+    learn([learn]) --> build([build]) --> brk([break]) --> debug([debug]) --> understand([understand]) --> rebuild([rebuild]) --> ship([ship])
+    ship -. next problem .-> learn
+    classDef surface stroke:#22a6c7,stroke-width:1.5px
+    classDef middle stroke:#8b5cf6,stroke-width:1.5px
+    classDef core stroke:#e0952f,stroke-width:1.5px
+    class learn,build surface
+    class brk,debug,understand middle
+    class rebuild,ship core
 ```
 
 > **Understand** before abstracting.
@@ -284,36 +249,17 @@ flowchart LR
 
 ## `~/stack`
 
-<sub>the tools, not the point</sub>
-
-<table>
-<tr>
-<td width="18%"><b>languages</b></td>
-<td><img src="https://skillicons.dev/icons?i=python,cpp,c,java&theme=dark" height="36" alt="Python, C++, C, Java" /> &nbsp; <code>SQL</code> <code>MATLAB</code></td>
-</tr>
-<tr>
-<td><b>ai / ml</b></td>
-<td><img src="https://skillicons.dev/icons?i=pytorch,tensorflow,sklearn,opencv&theme=dark" height="36" alt="PyTorch, TensorFlow, scikit-learn, OpenCV" /> &nbsp; <code>Keras</code> <code>Hugging Face</code></td>
-</tr>
-<tr>
-<td><b>data</b></td>
-<td><code>NumPy</code> <code>Pandas</code> <code>SciPy</code> <code>Matplotlib</code> <code>Seaborn</code> <code>RDKit</code></td>
-</tr>
-<tr>
-<td><b>databases</b></td>
-<td><img src="https://skillicons.dev/icons?i=postgres,mysql,sqlite&theme=dark" height="36" alt="PostgreSQL, MySQL, SQLite" /></td>
-</tr>
-<tr>
-<td><b>tools</b></td>
-<td><img src="https://skillicons.dev/icons?i=linux,git,github,vscode&theme=dark" height="36" alt="Linux, Git, GitHub, VS Code" /></td>
-</tr>
-</table>
+| layer | tools |
+| :-- | :-- |
+| **languages** | <img src="https://skillicons.dev/icons?i=python,cpp,c,java&theme=dark" height="34" alt="Python, C++, C, Java"> &nbsp; `SQL` `MATLAB` |
+| **ai / ml** | <img src="https://skillicons.dev/icons?i=pytorch,tensorflow,sklearn,opencv&theme=dark" height="34" alt="PyTorch, TensorFlow, scikit-learn, OpenCV"> &nbsp; `Keras` `Hugging Face` |
+| **data** | `NumPy` `Pandas` `SciPy` `Matplotlib` `Seaborn` `RDKit` |
+| **databases** | <img src="https://skillicons.dev/icons?i=postgres,mysql,sqlite&theme=dark" height="34" alt="PostgreSQL, MySQL, SQLite"> |
+| **tooling** | <img src="https://skillicons.dev/icons?i=linux,git,github,vscode&theme=dark" height="34" alt="Linux, Git, GitHub, VS Code"> |
 
 <br>
 
 ## `~/exploring`
-
-<sub>directions currently holding my attention</sub>
 
 ```text
 $ ps -eo pid,stat,cmd --sort=curiosity
@@ -333,33 +279,28 @@ $ ps -eo pid,stat,cmd --sort=curiosity
 
 ## `~/activity`
 
-<sub>proof of work</sub>
-
-<div align="center">
-
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://github-readme-stats.vercel.app/api?username=YOUR_GITHUB_USERNAME&show_icons=true&hide_border=true&theme=github_dark&include_all_commits=true" />
-  <img height="160" src="https://github-readme-stats.vercel.app/api?username=YOUR_GITHUB_USERNAME&show_icons=true&hide_border=true&include_all_commits=true" alt="GitHub stats" />
-</picture>
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://github-readme-stats.vercel.app/api/top-langs/?username=YOUR_GITHUB_USERNAME&layout=compact&langs_count=6&hide_border=true&theme=github_dark" />
-  <img height="160" src="https://github-readme-stats.vercel.app/api/top-langs/?username=YOUR_GITHUB_USERNAME&layout=compact&langs_count=6&hide_border=true" alt="Top languages" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/DeepakSkandh/DeepakSkandh/main/assets/generated/stats-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/DeepakSkandh/DeepakSkandh/main/assets/generated/stats-light.svg">
+  <img alt="GitHub activity over the past year: contributions, streaks, public repositories, weekly activity and languages." src="https://raw.githubusercontent.com/DeepakSkandh/DeepakSkandh/main/assets/generated/stats-dark.svg" width="100%">
 </picture>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://streak-stats.demolab.com?user=YOUR_GITHUB_USERNAME&theme=dark&hide_border=true" />
-  <img src="https://streak-stats.demolab.com?user=YOUR_GITHUB_USERNAME&theme=default&hide_border=true" alt="GitHub streak" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/DeepakSkandh/DeepakSkandh/main/assets/generated/snake-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/DeepakSkandh/DeepakSkandh/main/assets/generated/snake-light.svg">
+  <img alt="A snake eating the contribution graph." src="https://raw.githubusercontent.com/DeepakSkandh/DeepakSkandh/main/assets/generated/snake-dark.svg" width="100%">
 </picture>
 
-</div>
+### `~/log`
 
-<details>
-<summary><b>contribution activity</b></summary>
-<br>
+<sub>Recent public activity, rewritten daily by a workflow in this repo.</sub>
 
-<img width="100%" src="https://github-readme-activity-graph.vercel.app/graph?username=YOUR_GITHUB_USERNAME&bg_color=0d1117&color=c9d1d9&line=58a6ff&point=58a6ff&area=true&area_color=58a6ff&hide_border=true" alt="Contribution activity graph" />
-
-</details>
+<!-- LOG:START -->
+```text
+$ git log --author="DeepakSkandh" --all --oneline -n 8
+  (waiting for the first sync)
+```
+<!-- LOG:END -->
 
 <br>
 
@@ -367,17 +308,20 @@ $ ps -eo pid,stat,cmd --sort=curiosity
 
 <div align="center">
 
-[`github`](https://github.com/Deepakskandh) &nbsp;·&nbsp;
+<a href="https://github.com/DeepakSkandh"><kbd>&nbsp;github&nbsp;</kbd></a>&nbsp;
+<a href="mailto:deepakskandh"><kbd>&nbsp;email&nbsp;</kbd></a>&nbsp;
 
-[`email`](mailto:deepakskandh@gmail.com) &nbsp;·&nbsp;
-
-
-<br>
-
-<img src="https://komarev.com/ghpvc/?username=YOUR_GITHUB_USERNAME&style=flat-square&color=58a6ff&label=visitors" alt="profile views" />
 
 <br><br>
 
-<sub><code>// still compiling.</code></sub>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/DeepakSkandh/DeepakSkandh/main/assets/footer-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/DeepakSkandh/DeepakSkandh/main/assets/footer-light.svg">
+  <img alt="still compiling." src="https://raw.githubusercontent.com/DeepakSkandh/DeepakSkandh/main/assets/footer-dark.svg" width="100%">
+</picture>
+
+<img src="https://komarev.com/ghpvc/?username=DeepakSkandh&style=flat-square&color=6d8cf5&label=visitors" alt="profile visitors">
 
 </div>
+
+[^leaky]: Joel Spolsky named this the Law of Leaky Abstractions in 2002: every non-trivial abstraction eventually exposes some of the detail it was built to hide.
