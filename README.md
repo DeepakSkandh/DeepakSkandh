@@ -26,38 +26,9 @@
 
 
 
-Reverse-mode autodiff walks the computation graph backwards and multiplies local derivatives along the way:
 
-$$
-\frac{\partial \mathcal{L}}{\partial \theta} = \frac{\partial \mathcal{L}}{\partial y} \cdot \frac{\partial y}{\partial h} \cdot \frac{\partial h}{\partial \theta}
-$$
 
-```text
-loss.backward()
- └─ traverse the autograd graph in reverse topological order
-    └─ each op's backward() applies its local derivative
-       └─ gradients accumulate into every leaf tensor's .grad
-          └─ kernels launch on the GPU
-             └─ often limited by memory bandwidth, not FLOPs
-```
 
-</details>
-
-<details>
-<summary><code>softmax(QKᵀ / √dₖ) V</code></summary>
-<br>
-
-$$
-\mathrm{Attention}(Q, K, V) = \mathrm{softmax}\left(\frac{QK^{\top}}{\sqrt{d_k}}\right)V
-$$
-
-For a sequence of length $n$, the score matrix $QK^{\top}$ is $n \times n$, so naive attention costs $O(n^2 d)$ time and $O(n^2)$ memory. FlashAttention computes the exact same result in tiles that never write the full matrix to GPU memory, which is one reason long context windows became practical.
-
-</details>
-
-<details>
-<summary><code>printf("hello\n");</code></summary>
-<br>
 
 ```text
 printf("hello\n");
@@ -84,27 +55,7 @@ printf("hello\n");
 
 
 
-## `~/philosophy`
 
-```mermaid
-flowchart LR
-    learn([learn]) --> build([build]) --> brk([break]) --> debug([debug]) --> understand([understand]) --> rebuild([rebuild]) --> ship([ship])
-    ship -. next problem .-> learn
-    classDef surface stroke:#22a6c7,stroke-width:1.5px
-    classDef middle stroke:#8b5cf6,stroke-width:1.5px
-    classDef core stroke:#e0952f,stroke-width:1.5px
-    class learn,build surface
-    class brk,debug,understand middle
-    class rebuild,ship core
-```
-
-> **Understand** before abstracting.
->
-> **Measure** before optimizing.
->
-> **Build** before overengineering.
->
-> **Read the source** when the abstraction stops making sense.
 
 <br>
 
@@ -113,10 +64,14 @@ flowchart LR
 | layer | tools |
 | :-- | :-- |
 | **languages** | <img src="https://skillicons.dev/icons?i=python,cpp,c,java&theme=dark" height="34" alt="Python, C++, C, Java"> &nbsp; `SQL` `MATLAB` |
-| **ai / ml** | <img src="https://skillicons.dev/icons?i=pytorch,tensorflow,sklearn,opencv&theme=dark" height="34" alt="PyTorch, TensorFlow, scikit-learn, OpenCV"> &nbsp; `Keras` `Hugging Face` |
-| **data** | `NumPy` `Pandas` `SciPy` `Matplotlib` `Seaborn` `RDKit` |
+| **ai / ml** | <img src="https://skillicons.dev/icons?i=pytorch,tensorflow,sklearn,opencv,keras,huggingface&theme=dark" height="34" alt="PyTorch, TensorFlow, scikit-learn, OpenCV, Keras, Hugging Face"> |
+| **data** | <img src="https://skillicons.dev/icons?i=numpy,pandas,scipy&theme=dark" height="34" alt="NumPy, Pandas, SciPy"> &nbsp; `Matplotlib` `Seaborn` `RDKit` |
 | **databases** | <img src="https://skillicons.dev/icons?i=postgres,mysql,sqlite&theme=dark" height="34" alt="PostgreSQL, MySQL, SQLite"> |
 | **tooling** | <img src="https://skillicons.dev/icons?i=linux,git,github,vscode&theme=dark" height="34" alt="Linux, Git, GitHub, VS Code"> |
+| **backend** | <img src="https://skillicons.dev/icons?i=flask,fastapi&theme=dark" height="34" alt="Flask, FastAPI"> |
+| **systems** | <img src="https://skillicons.dev/icons?i=linux,docker,cmake&theme=dark" height="34" alt="Linux, Docker, CMake"> &nbsp; `Distributed Systems` `HPC` |
+| **cloud** | <img src="https://skillicons.dev/icons?i=aws&theme=dark" height="34" alt="AWS"> |
+| **automation** | <img src="https://skillicons.dev/icons?i=githubactions,bash&theme=dark" height="34" alt="GitHub Actions, Bash"> |
 
 <br>
 
