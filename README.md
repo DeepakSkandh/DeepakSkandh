@@ -13,7 +13,7 @@
 <br>
 
 <!-- Replace with a suitable developer GIF -->
-<img src="https://giphy.com/gifs/work-stress-email-eyoisu369Ulbuz4D90" width="460" alt="late-night terminal session" /> 
+<img src="https://tenor.com/view/data-code-coding-facts-numbers-gif-27290753" width="460" alt="late-night terminal session" /> 
 
 <sub>building, breaking, and understanding things from the inside out.</sub>
 
