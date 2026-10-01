@@ -18,7 +18,7 @@
 
 
 <a href="#interests"><kbd>&nbsp;interests&nbsp;</kbd></a>&nbsp;
-<a href="#exploring"><kbd>&nbsp;exploring&nbsp;</kbd></a>&nbsp;
+<a href="#stack"><kbd>&nbsp;stack&nbsp;</kbd></a>&nbsp;
 <a href="#activity"><kbd>&nbsp;activity&nbsp;</kbd></a>&nbsp;
 <a href="#connect"><kbd>&nbsp;connect&nbsp;</kbd></a>
 
@@ -30,14 +30,6 @@
 
 
 
-```text
-printf("hello\n");
- └─ formatted into a user-space stdio buffer
-    └─ the newline flushes it: write(1, "hello\n", 6)
-       └─ system call traps into the kernel
-          └─ file descriptor 1 → tty driver
-             └─ characters on a terminal
-```
 
 </details>
 
@@ -48,7 +40,7 @@ printf("hello\n");
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/DeepakSkandh/DeepakSkandh/main/assets/interests-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/DeepakSkandh/DeepakSkandh/main/assets/interests-light.svg">
-  <img alt="Intelligence (why does it generalize?): artificial intelligence, machine learning, deep learning, LLMs and generative AI, NLP, computer vision. Systems (where does the time go?): backend engineering, database systems, distributed systems, HPC, systems engineering, automation. Foundations (what does it cost?): algorithms, data structures, competitive programming, probability, statistics. Science (what does the data say?): data science, computational biology, research, experimentation." src="https://raw.githubusercontent.com/DeepakSkandh/DeepakSkandh/main/assets/interests-dark.svg" width="100%">
+  <img alt="Intelligence artificial intelligence, machine learning, deep learning, LLMs and generative AI, NLP, computer vision. Systems backend engineering, database systems, distributed systems, HPC, systems engineering, automation. Foundations algorithms, data structures, competitive programming, probability, statistics. Science data science, computational biology, research, experimentation." src="https://raw.githubusercontent.com/DeepakSkandh/DeepakSkandh/main/assets/interests-dark.svg" width="100%">
 </picture>
 
 
@@ -75,23 +67,7 @@ printf("hello\n");
 
 <br>
 
-## `~/exploring`
 
-```text
-$ ps -eo pid,stat,cmd --sort=curiosity
-
-  PID  STAT  CMD
-  101  R     cpp-systems          --memory-model --performance
-  102  R     database-internals   --storage --query-execution
-  103  R     distributed-systems  --consensus --replication
-  104  R     llm-engineering      --inference --evaluation
-  105  R     competitive-prog     --contests --upsolving
-  106  R     backend-engineering  --apis --concurrency
-  107  R     hpc                  --parallelism --cache-locality
-  108  R     ml-systems           --training --serving
-```
-
-<br>
 
 ## `~/activity`
 
