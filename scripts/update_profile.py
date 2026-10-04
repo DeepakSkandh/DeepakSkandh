@@ -230,25 +230,40 @@ def _describe(ev: dict, user: str):
 
 
 def render_log(events: list, user: str, limit: int = 8) -> str:
-    rows, seen = [], set()
+    """One line per repo for pushes (latest day, how many days active), one line per other event."""
+    events = sorted(events, key=lambda e: e["created_at"], reverse=True)   # the API is not strictly ordered
+    rows: list[dict] = []
+    pushes: dict[str, dict] = {}
     for ev in events:
         d = _describe(ev, user)
         if not d:
             continue
+        kind, repo, detail = d
         day = ev["created_at"][:10]
-        key = (day, d[0], d[1])
-        if d[0] == "push" and key in seen:  # one line per repo per day
-            continue
-        seen.add(key)
-        rows.append((day, *d))
-        if len(rows) >= limit:
-            break
+        if kind == "push":
+            if repo in pushes:
+                pushes[repo]["days"].add(day)
+                continue
+            row = {"day": day, "kind": kind, "repo": repo, "branch": detail.split(",")[0], "days": {day}}
+            pushes[repo] = row
+        else:
+            row = {"day": day, "kind": kind, "repo": repo, "detail": detail}
+        rows.append(row)
+
+    rows = rows[:limit]
+    for r in rows:
+        if r["kind"] == "push":
+            n = len(r["days"])
+            r["detail"] = r["branch"] + (f", active {n} days since {min(r['days'])[5:]}" if n > 1 else "")
+
     lines = [f'$ git log --author="{user}" --all --oneline -n {limit}']
     if not rows:
         lines.append("  (no recent public activity)")
-    for day, kind, repo, detail in rows:
-        repo = repo if len(repo) <= 26 else repo[:25] + "…"
-        lines.append(f"  {day}  {kind:<8} {repo:<27} {detail}".rstrip())
+        return "\n".join(lines)
+    width = min(40, max(len(r["repo"]) for r in rows))
+    for r in rows:
+        repo = r["repo"] if len(r["repo"]) <= width else r["repo"][: width - 1] + "…"
+        lines.append(f"  {r['day']}  {r['kind']:<7} {repo:<{width}}  {r['detail']}".rstrip())
     return "\n".join(lines)
 
 
