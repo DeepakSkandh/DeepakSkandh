@@ -90,6 +90,7 @@
 <!-- LOG:START -->
 ```text
 $ git log --author="DeepakSkandh" --all --oneline -n 8
+  2026-10-07  push    java-programming                          main
   2026-10-06  push    sklearn                                   main
   2026-10-05  push    High-performance-computing                main, active 3 days since 10-02
   2026-10-04  push    Gen-ai                                    main
@@ -97,7 +98,6 @@ $ git log --author="DeepakSkandh" --all --oneline -n 8
   2026-09-24  push    amazon-ml-hackathon-2026                  main
   2026-09-18  push    flask                                     main
   2026-09-16  issue   Nithinsaim/Digital-Rheology-PI-LSTM       #1 opened
-  2026-09-16  star    DS-AI-GATE/dsai-gate                      starred
 ```
 <!-- LOG:END -->
 
