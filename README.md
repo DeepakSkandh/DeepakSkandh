@@ -90,14 +90,14 @@
 <!-- LOG:START -->
 ```text
 $ git log --author="DeepakSkandh" --all --oneline -n 8
-  2026-10-19  push    java-programming             main, active 6 days since 10-07
-  2026-10-19  star    MadsLorentzen/ai-job-search  starred
-  2026-10-16  push    drgrade-cpu-accelerated      main, active 3 days since 10-14
-  2026-10-15  star    morluto/rea                  starred
-  2026-10-10  push    campusconnect                main
-  2026-10-06  push    sklearn                      main
-  2026-10-05  push    High-performance-computing   main, active 3 days since 10-02
-  2026-10-04  push    Gen-ai                       main
+  2026-10-19  push    java-programming                 main, active 6 days since 10-07
+  2026-10-19  star    ai-job-search-dev/ai-job-search  starred
+  2026-10-16  push    drgrade-cpu-accelerated          main, active 3 days since 10-14
+  2026-10-15  star    morluto/rea                      starred
+  2026-10-10  push    campusconnect                    main
+  2026-10-06  push    sklearn                          main
+  2026-10-05  push    High-performance-computing       main, active 3 days since 10-02
+  2026-10-04  push    Gen-ai                           main
 ```
 <!-- LOG:END -->
 
