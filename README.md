@@ -92,6 +92,7 @@
 $ git log --author="DeepakSkandh" --all --oneline -n 8
   2026-11-26  star    mnfst/llm-gateway            starred
   2026-11-26  star    mnfst/awesome-free-llm-apis  starred
+  2026-11-25  push    agentic-pdf-assitant         main
   2026-11-20  push    sklearn                      main
   2026-11-18  push    exam_portal_app              main
   2026-11-18  push    flask                        main
